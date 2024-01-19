@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 @NoArgsConstructor
@@ -21,13 +21,14 @@ public class Orders {
     private Long id;
 
     @Column(name = "serial_number", length = 100)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String serialNumber;
 
     @Column(name = "total_price")
     private Double totalPrice;
 
     @Enumerated(EnumType.STRING)
-    private EOrderStatus status;
+    private EOrder status;
 
     @Column(length = 100)
     private String note;
@@ -50,7 +51,7 @@ public class Orders {
     private Date received;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
 
     @OneToMany(mappedBy = "orders")

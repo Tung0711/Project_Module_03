@@ -21,16 +21,40 @@ public class CategoryController {
     @GetMapping("")
     public ResponseEntity<?> getAll(@RequestParam(defaultValue = "5", name = "limit") int limit,
                                     @RequestParam(defaultValue = "0", name = "page") int page,
-                                    @RequestParam(defaultValue = "catalogName", name = "sort") String sort
+                                    @RequestParam(defaultValue = "catalogName", name = "sort") String sort,
+                                    @RequestParam(defaultValue = "asc", name = "sort_by") String sort_by
     ) {
-        Pageable pageable = PageRequest.of ( page, limit, Sort.by ( sort ).ascending () );
+        Pageable pageable;
+        if (sort_by.equals ( "asc" )) {
+            pageable = PageRequest.of ( page, limit, Sort.by ( sort ).ascending () );
+        } else {
+            pageable = PageRequest.of ( page, limit, Sort.by ( sort ).descending () );
+        }
         Page<CategoriesResponse> categories = categoriesService.getAll ( pageable );
-        return new ResponseEntity<> ( categories, HttpStatus.CREATED );
+        return new ResponseEntity<> ( categories, HttpStatus.OK );
     }
 
     @PostMapping("")
     public ResponseEntity<?> create(@RequestBody Categories categories) {
-        Categories categoriesNew = categoriesService.save ( categories );
-        return new ResponseEntity<> ( categoriesNew, HttpStatus.CREATED );
+        Categories categoriesCreate = categoriesService.save ( categories );
+        return new ResponseEntity<> ( categoriesCreate, HttpStatus.CREATED );
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@RequestBody Categories categories) {
+        Categories categoriesUpdate = categoriesService.save ( categories );
+        return new ResponseEntity<> ( categoriesUpdate, HttpStatus.OK );
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getById(@PathVariable Long id) {
+        Categories categories = categoriesService.findById ( id );
+        return new ResponseEntity<> ( categories, HttpStatus.OK );
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        categoriesService.delete ( id );
+        return new ResponseEntity<> ( "Đã xóa thành công", HttpStatus.OK );
     }
 }

@@ -8,7 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -61,19 +61,19 @@ public class User {
     )
     private Set<Role> roles = new HashSet<> ();
 
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "user")
     @JsonIgnore
     List<Orders> orders;
 
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "user")
     @JsonIgnore
     List<ShoppingCart> shoppingCarts;
 
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "user")
     @JsonIgnore
     List<Address> addresses;
 
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "user")
     @JsonIgnore
     List<WishList> wishLists;
 }

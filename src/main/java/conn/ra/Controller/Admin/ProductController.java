@@ -22,16 +22,40 @@ public class ProductController {
     public ResponseEntity<?> getAll(
             @RequestParam(defaultValue = "5", name = "limit") int limit,
             @RequestParam(defaultValue = "0", name = "page") int page,
-            @RequestParam(defaultValue = "productName", name = "sort") String sort
+            @RequestParam(defaultValue = "productName", name = "sort") String sort,
+            @RequestParam(defaultValue = "asc", name = "sort_by") String sort_by
     ) {
-        Pageable pageable = PageRequest.of ( page, limit, Sort.by ( sort ).ascending () );
+        Pageable pageable;
+        if (sort_by.equals ( "asc" )) {
+            pageable = PageRequest.of ( page, limit, Sort.by ( sort ).ascending () );
+        } else {
+            pageable = PageRequest.of ( page, limit, Sort.by ( sort ).descending () );
+        }
         Page<ProductResponse> products = productService.getAll ( pageable );
-        return new ResponseEntity<> ( products, HttpStatus.CREATED );
+        return new ResponseEntity<> ( products, HttpStatus.OK );
     }
 
     @PostMapping("")
     public ResponseEntity<?> create(@RequestBody Product product) {
-        Product productNew = productService.save ( product );
-        return new ResponseEntity<> ( productNew, HttpStatus.CREATED );
+        Product productCreate = productService.save ( product );
+        return new ResponseEntity<> ( productCreate, HttpStatus.CREATED );
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@RequestBody Product product) {
+        Product productUpdate = productService.save ( product );
+        return new ResponseEntity<> ( productUpdate, HttpStatus.OK );
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getById(@PathVariable Long id) {
+        Product product = productService.findById ( id );
+        return new ResponseEntity<> ( product, HttpStatus.OK );
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        productService.delete ( id );
+        return new ResponseEntity<> ( "Đã xóa thành công", HttpStatus.OK );
     }
 }

@@ -10,11 +10,13 @@ import lombok.*;
 public class CategoriesResponse {
     private Long id;
     private String catalogName;
+    private String description;
     private Boolean status;
 
     public CategoriesResponse(Categories categories) {
         this.id = categories.getId ();
         this.catalogName = categories.getCatalogName ();
+        this.description = categories.getDescription ();
         this.status = categories.getStatus ();
     }
 }

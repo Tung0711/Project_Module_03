@@ -14,12 +14,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserLogin {
     @NotNull(message = "Không được null")
-    @NotEmpty(message = "Không được rỗng")
-    @NotBlank(message = "Không được để trống")
     private String userName;
+
     @NotNull(message = "Không được null")
-    @NotEmpty(message = "Không được rỗng")
-    @NotBlank(message = "Không được để trống")
     private String password;
 
 }

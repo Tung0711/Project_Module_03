@@ -2,6 +2,7 @@ package conn.ra.Service.Auth;
 
 import conn.ra.Model.Dto.Request.UserLogin;
 import conn.ra.Model.Dto.Response.UserResponse;
+import conn.ra.Model.Entity.ERole;
 import conn.ra.Model.Entity.Role;
 import conn.ra.Model.Entity.User;
 import conn.ra.Repository.RoleRepository;
@@ -37,7 +38,7 @@ public class UserServiceImpl implements UserService {
         // mã hóa mật khẩu
         user.setPassword ( new BCryptPasswordEncoder ().encode ( user.getPassword () ) );
         // tìm quyền theo tên để set default register sẽ có quyền là user
-        Role role = roleRepository.findByName ( "ROLE_USER" );
+        Role role = roleRepository.findByRoleName ( ERole.valueOf ( "ROLE_USER" ) );
         Set<Role> roles = new HashSet<> ();
         roles.add ( role );
         user.setRoles ( roles );

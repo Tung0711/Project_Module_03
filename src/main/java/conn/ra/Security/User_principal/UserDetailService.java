@@ -15,15 +15,16 @@ import java.util.Optional;
 public class UserDetailService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> userOptional = userRepository.findByUserName(username);
-        if(userOptional.isPresent()){
-            User user = userOptional.get();
-            UserPrincipal userPrincipal = UserPrincipal.builder().
-                    user(user).authorities(user.getRoles().stream().map(
-                            item->new SimpleGrantedAuthority(item.getName())
-                    ).toList()).build();
+        Optional<User> userOptional = userRepository.findByUserName ( username );
+        if (userOptional.isPresent ()) {
+            User user = userOptional.get ();
+            UserPrincipal userPrincipal = UserPrincipal.builder ().
+                    user ( user ).authorities ( user.getRoles ().stream ().map (
+                            item -> new SimpleGrantedAuthority ( item.getRoleName ().name () )
+                    ).toList () ).build ();
             return userPrincipal;
         }
         return null;

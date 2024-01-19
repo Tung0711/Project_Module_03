@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.*;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 @NoArgsConstructor
@@ -22,6 +22,7 @@ public class Product {
     private Long id;
 
     @Column(unique = true,length = 100)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String sku;
 
     @Column(name = "product_name",unique = true,length = 100)
@@ -47,7 +48,7 @@ public class Product {
     private Date updated;
 
     @ManyToOne
-    @JoinColumn(name = "catalog_id",referencedColumnName = "id")
+    @JoinColumn(name = "catalog_id",referencedColumnName = "catalog_id")
     private Categories categories;
 
     @OneToMany(mappedBy = "product")
