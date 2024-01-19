@@ -15,12 +15,16 @@ import java.util.List;
 public class Categories {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "catalog_id")
     private Long id;
-    @Column(unique = true)
+
+    @Column(name = "catalog_name",unique = true,length = 100)
     private String catalogName;
+
     private String description;
-    @Column(columnDefinition = "boolean default true")
+
     private Boolean status;
+
     @OneToMany(mappedBy = "categories")
     @JsonIgnore
     List<Product> products;

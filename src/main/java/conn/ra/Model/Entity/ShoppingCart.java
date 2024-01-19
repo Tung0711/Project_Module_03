@@ -1,6 +1,7 @@
 package conn.ra.Model.Entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.*;
 
 @NoArgsConstructor
@@ -12,12 +13,18 @@ import lombok.*;
 public class ShoppingCart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "shopping_cart_id")
     private Long id;
+
     @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;
+
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
+    @Column(name = "order_quantity")
+    @Min(1)
     private Integer orderQuantity;
 }

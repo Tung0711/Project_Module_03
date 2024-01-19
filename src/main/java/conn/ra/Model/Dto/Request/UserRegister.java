@@ -32,6 +32,6 @@ public class UserRegister {
     private String address;
     @Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "không đúng định dạng")
     private String email;
-    @Pattern(regexp = "/(03|05|07|08|09|01[2|6|4|8|9])+([0-9]{8})\\\\b/\n", message = "Không đúng định dạng")
+    @Pattern(regexp = "/(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})\\\\b/\n", message = "Không đúng định dạng")
     private String phone;
 }
