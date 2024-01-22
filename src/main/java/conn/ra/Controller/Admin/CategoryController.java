@@ -1,6 +1,6 @@
 package conn.ra.Controller.Admin;
 
-import conn.ra.Model.Dto.Response.CategoriesResponse;
+import conn.ra.Model.Dto.Request.CategoriesRequest;
 import conn.ra.Model.Entity.Categories;
 import conn.ra.Service.Categories.CategoriesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,41 +19,45 @@ public class CategoryController {
     private CategoriesService categoriesService;
 
     @GetMapping("")
-    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "5", name = "limit") int limit,
+    public ResponseEntity<Page<Categories>> getAll(@RequestParam(defaultValue = "5", name = "limit") int limit,
                                     @RequestParam(defaultValue = "0", name = "page") int page,
                                     @RequestParam(defaultValue = "catalogName", name = "sort") String sort,
-                                    @RequestParam(defaultValue = "asc", name = "sort_by") String sort_by
+                                    @RequestParam(defaultValue = "asc", name = "sortBy") String sortBy
     ) {
         Pageable pageable;
-        if (sort_by.equals ( "asc" )) {
+        if (sortBy.equals ( "asc" )) {
             pageable = PageRequest.of ( page, limit, Sort.by ( sort ).ascending () );
         } else {
             pageable = PageRequest.of ( page, limit, Sort.by ( sort ).descending () );
         }
-        Page<CategoriesResponse> categories = categoriesService.getAll ( pageable );
+        Page<Categories> categories = categoriesService.getAll ( pageable );
         return new ResponseEntity<> ( categories, HttpStatus.OK );
     }
 
     @PostMapping("")
-    public ResponseEntity<?> create(@RequestBody Categories categories) {
-        Categories categoriesCreate = categoriesService.save ( categories );
+    public ResponseEntity<Categories> create(@RequestBody CategoriesRequest categoriesRequest) {
+        Categories categoriesCreate = categoriesService.add ( categoriesRequest );
         return new ResponseEntity<> ( categoriesCreate, HttpStatus.CREATED );
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@RequestBody Categories categories) {
-        Categories categoriesUpdate = categoriesService.save ( categories );
+    public ResponseEntity<Categories> update(@RequestBody CategoriesRequest categoriesRequest,@PathVariable("id") Long id) {
+        Categories categoriesUpdate = categoriesService.edit ( categoriesRequest,id );
         return new ResponseEntity<> ( categoriesUpdate, HttpStatus.OK );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable Long id) {
+    public ResponseEntity<Categories> getById(@PathVariable("id") Long id) {
         Categories categories = categoriesService.findById ( id );
-        return new ResponseEntity<> ( categories, HttpStatus.OK );
+        if(categories == null) {
+            throw new RuntimeException("Danh mục không tồn tại!");
+        }else {
+            return new ResponseEntity<> ( categories, HttpStatus.OK );
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    public ResponseEntity<String> delete(@PathVariable("id") Long id) {
         categoriesService.delete ( id );
         return new ResponseEntity<> ( "Đã xóa thành công", HttpStatus.OK );
     }

@@ -16,7 +16,7 @@ public class UserRegister {
 
     @Size(min = 6, max = 100, message = "số kí tự không chính xác")
     @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "không chứa kí tự đặc biệt")
-    private String username;
+    private String userName;
 
     @NotNull(message = "Không được null")
     private String password;

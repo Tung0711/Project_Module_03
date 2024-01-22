@@ -1,6 +1,7 @@
 package conn.ra.Controller.Auth;
 
 import conn.ra.Model.Dto.Request.UserLogin;
+import conn.ra.Model.Dto.Request.UserRegister;
 import conn.ra.Model.Dto.Response.UserResponse;
 import conn.ra.Model.Entity.User;
 import conn.ra.Service.Auth.UserService;
@@ -16,8 +17,8 @@ public class AuthController {
     @Autowired
     private UserService userService;
     @PostMapping("/sign-up")
-    public ResponseEntity<?> signUp(@RequestBody @Valid User user){
-        User userNew = userService.register(user);
+    public ResponseEntity<?> signUp(@RequestBody @Valid UserRegister userRegister){
+        User userNew = userService.register(userRegister);
         if(userNew != null){
             return new ResponseEntity<>("register successful !",HttpStatus.CREATED);
         }

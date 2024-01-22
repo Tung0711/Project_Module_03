@@ -26,12 +26,16 @@ public class JwtProvider {
         try {
             Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
             return true;
-        } catch (ExpiredJwtException expiredJwtException){
-            logger.error("Expired Token {}",expiredJwtException.getMessage());
+        } catch (ExpiredJwtException expiredJwtException) {
+            logger.error ( "Expired Token {}", expiredJwtException.getMessage () );
+        }catch (UnsupportedJwtException e) {
+            logger.error("Unsupported Token Message {}", e.getMessage());
         } catch (SignatureException signatureException){
             logger.error("Invalid Signature Token {}",signatureException.getMessage());
-        } catch (MalformedJwtException malformedJwtException){
-            logger.error("Invalid format {}",malformedJwtException.getMessage());
+        } catch (MalformedJwtException malformedJwtException) {
+            logger.error ( "Invalid format {}", malformedJwtException.getMessage () );
+        }catch (IllegalArgumentException e) {
+            logger.error("Claims Empty Token Message {}", e.getMessage());
         }
         return false;
     }

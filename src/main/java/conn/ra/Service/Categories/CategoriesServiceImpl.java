@@ -1,6 +1,6 @@
 package conn.ra.Service.Categories;
 
-import conn.ra.Model.Dto.Response.CategoriesResponse;
+import conn.ra.Model.Dto.Request.CategoriesRequest;
 import conn.ra.Model.Entity.Categories;
 import conn.ra.Repository.CategoriesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CategoriesServiceImpl implements CategoriesService {
@@ -17,9 +16,8 @@ public class CategoriesServiceImpl implements CategoriesService {
     private CategoriesRepository categoriesRepository;
 
     @Override
-    public Page<CategoriesResponse> getAll(Pageable pageable) {
-        Page<Categories> categories = categoriesRepository.findAll ( pageable );
-        return categories.map ( CategoriesResponse::new );
+    public Page<Categories> getAll(Pageable pageable) {
+        return categoriesRepository.findAll ( pageable );
     }
 
     @Override
@@ -28,12 +26,33 @@ public class CategoriesServiceImpl implements CategoriesService {
     }
 
     @Override
-    public Categories save(Categories categories) {
+    public Categories add(CategoriesRequest categoriesRequest) {
+        Categories categories = Categories.builder()
+                .catalogName (categoriesRequest.getCatalogName ())
+                .description(categoriesRequest.getDescription())
+                .status(true)
+                .build();
+        return categoriesRepository.save ( categories );
+    }
+
+    @Override
+    public Categories edit(CategoriesRequest categoriesRequest, Long id) {
+        Categories categories = Categories.builder()
+                .id(id)
+                .catalogName (categoriesRequest.getCatalogName ())
+                .description(categoriesRequest.getDescription())
+                .status(true)
+                .build();
         return categoriesRepository.save ( categories );
     }
 
     @Override
     public void delete(Long id) {
         categoriesRepository.deleteById ( id );
+    }
+
+    @Override
+    public List<Categories> getByStatus() {
+        return categoriesRepository.findByStatus(true);
     }
 }

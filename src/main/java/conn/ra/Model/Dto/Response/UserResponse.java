@@ -14,7 +14,9 @@ import java.util.Set;
 public class UserResponse {
     private Long id;
     private String fullName;
+    private String userName;
     private String token;
     private final String type = "Bearer Token";
+    private Boolean status;
     private Set<String> roles;
 }

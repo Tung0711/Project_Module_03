@@ -1,16 +1,20 @@
 package conn.ra.Service.Product;
 
-import conn.ra.Model.Dto.Response.ProductResponse;
+import conn.ra.Model.Dto.Request.ProductRequest;
 import conn.ra.Model.Entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface ProductService {
-    Page<ProductResponse> getAll(Pageable pageable);
+    Page<Product> getAll(Pageable pageable);
 
     Product findById(Long id);
 
-    Product save(Product product);
+    Product add(ProductRequest productRequest);
+    Product edit(ProductRequest productRequest,Long id);
 
     void delete(Long id);
+    List<Product> getByNameOrDes(String productName, String description);
 }

@@ -1,16 +1,20 @@
 package conn.ra.Service.Categories;
 
-import conn.ra.Model.Dto.Response.CategoriesResponse;
+import conn.ra.Model.Dto.Request.CategoriesRequest;
 import conn.ra.Model.Entity.Categories;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface CategoriesService {
-    Page<CategoriesResponse> getAll(Pageable pageable);
+    Page<Categories> getAll(Pageable pageable);
 
     Categories findById(Long id);
 
-    Categories save(Categories categories);
+    Categories add(CategoriesRequest categoriesRequest);
+    Categories edit(CategoriesRequest categoriesRequest,Long id);
 
     void delete(Long id);
+    List<Categories> getByStatus();
 }

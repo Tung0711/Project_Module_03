@@ -1,6 +1,6 @@
 package conn.ra.Controller.Admin;
 
-import conn.ra.Model.Dto.Response.ProductResponse;
+import conn.ra.Model.Dto.Request.ProductRequest;
 import conn.ra.Model.Entity.Product;
 import conn.ra.Service.Product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,42 +19,46 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping()
-    public ResponseEntity<?> getAll(
+    public ResponseEntity<Page<Product>> getAll(
             @RequestParam(defaultValue = "5", name = "limit") int limit,
             @RequestParam(defaultValue = "0", name = "page") int page,
             @RequestParam(defaultValue = "productName", name = "sort") String sort,
-            @RequestParam(defaultValue = "asc", name = "sort_by") String sort_by
+            @RequestParam(defaultValue = "asc", name = "sortBy") String sortBy
     ) {
         Pageable pageable;
-        if (sort_by.equals ( "asc" )) {
+        if (sortBy.equals ( "asc" )) {
             pageable = PageRequest.of ( page, limit, Sort.by ( sort ).ascending () );
         } else {
             pageable = PageRequest.of ( page, limit, Sort.by ( sort ).descending () );
         }
-        Page<ProductResponse> products = productService.getAll ( pageable );
+        Page<Product> products = productService.getAll ( pageable );
         return new ResponseEntity<> ( products, HttpStatus.OK );
     }
 
     @PostMapping("")
-    public ResponseEntity<?> create(@RequestBody Product product) {
-        Product productCreate = productService.save ( product );
+    public ResponseEntity<Product> create(@RequestBody ProductRequest productRequest) {
+        Product productCreate = productService.add ( productRequest );
         return new ResponseEntity<> ( productCreate, HttpStatus.CREATED );
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@RequestBody Product product) {
-        Product productUpdate = productService.save ( product );
+    public ResponseEntity<Product> update(@RequestBody ProductRequest productRequest,@PathVariable("id") Long id) {
+        Product productUpdate = productService.edit ( productRequest,id );
         return new ResponseEntity<> ( productUpdate, HttpStatus.OK );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable Long id) {
+    public ResponseEntity<Product> getById(@PathVariable("id") Long id) {
         Product product = productService.findById ( id );
-        return new ResponseEntity<> ( product, HttpStatus.OK );
+        if (product == null) {
+            throw new RuntimeException("Sản phẩm không tồn tại");
+        } else {
+            return new ResponseEntity<> ( product, HttpStatus.OK );
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    public ResponseEntity<String> delete(@PathVariable("id") Long id) {
         productService.delete ( id );
         return new ResponseEntity<> ( "Đã xóa thành công", HttpStatus.OK );
     }
