@@ -13,10 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class UserLogin {
-    @NotNull(message = "Không được null")
     private String userName;
-
-    @NotNull(message = "Không được null")
     private String password;
 
 }

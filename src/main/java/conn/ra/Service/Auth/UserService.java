@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 
 public interface UserService {
-    User register(UserRegister userRegister);
+    String register(UserRegister userRegister);
     UserResponse login(UserLogin userLogin);
     Page<User> getAll(Pageable pageable);
     User findById(Long id);

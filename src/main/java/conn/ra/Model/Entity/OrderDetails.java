@@ -9,6 +9,8 @@ import lombok.*;
 @Data
 @Builder
 @Entity
+@Table(name = "order_detail")
+@IdClass(OrderDetailId.class)
 public class OrderDetails {
     @Id
     @ManyToOne

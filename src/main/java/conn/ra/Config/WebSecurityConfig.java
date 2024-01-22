@@ -8,9 +8,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class WebSecurityConfig {
     @Autowired
     private UserDetailsService userDetailService;
@@ -36,21 +39,25 @@ public class WebSecurityConfig {
                 authorizeHttpRequests(
                         (auth)->auth.requestMatchers("/v1/auth/**").permitAll()
                                 .requestMatchers("/v1/admin/**").hasAuthority("ROLE_ADMIN")
+                                .requestMatchers ( "/v1/user/**").hasAuthority("ROLE_USER")
+                                .requestMatchers("/v1/categories/**").permitAll()
+                                .requestMatchers("/v1/products/**").permitAll()
                                 .anyRequest().authenticated()
                 ).
                 exceptionHandling(
                         (auth)->auth.authenticationEntryPoint(jwtEntryPoint)
                                 .accessDeniedHandler(accessDenied)
-                ).
-                addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class).
+                )
+                .sessionManagement((auth) -> auth.sessionCreationPolicy( SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class).
                 build();
     }
     @Bean
-    PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
     @Bean
-    AuthenticationProvider authenticationProvider(){
+    public AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailService);
         authenticationProvider.setPasswordEncoder(passwordEncoder());
